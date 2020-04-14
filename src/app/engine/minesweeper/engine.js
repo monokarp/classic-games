@@ -11,6 +11,10 @@ export class MinesweeperEngine {
     handler(this.gameState);
   }
 
+  onGameOver(handler) {
+    handler();
+  }
+
   initGameState() {
     return new Promise((res, rej) => {
       res();
@@ -18,7 +22,7 @@ export class MinesweeperEngine {
     // place ships
   }
 
-  handleAction() {
+  handleAction(action) {
     return new Promise((res, rej) => {
       res();
     });

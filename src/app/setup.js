@@ -7,11 +7,11 @@ export function setup(gameType) {
   const engine = createEngine(gameType);
   const renderer = createRenderer(gameType);
 
-  engine.onStateChange(renderer.renderState);
-
   inputController.onStart(engine.initGameState);
 
   inputController.onPlayerAction(engine.handleAction);
+
+  engine.onStateChange(renderer.renderState);
 
   engine.onGameOver(renderer.renderGameOver);
 };

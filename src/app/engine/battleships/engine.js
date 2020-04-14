@@ -7,13 +7,15 @@ export class BattleshipsEngine {
 
     // need 2
     this.gameState = new GameField(BattleshipsTile);
-
-    this._isGameOver = false;
   }
 
   // replace w/ event emitter
   onStateChange(handler) {
     handler(this.gameState);
+  }
+
+  onGameOver(handler) {
+    handler();
   }
 
   initGameState() {
@@ -23,13 +25,9 @@ export class BattleshipsEngine {
     // place ships
   }
 
-  handleAction() {
+  handleAction(action) {
     return new Promise((res, rej) => {
       res();
     });
-  }
-
-  isGameOver() {
-    return this._isGameOver;
   }
 }
