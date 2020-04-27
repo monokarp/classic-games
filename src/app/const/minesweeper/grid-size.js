@@ -1,4 +1,4 @@
 export const GridSize = {
-  cols: 10,
-  rows: 10,
+  cols: 30,
+  rows: 16,
 };

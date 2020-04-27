@@ -1,8 +1,41 @@
-import { matrixOf } from '../../utils/matrix-of.js';
+export class TileGrid {
+  constructor(
+    tileType,
+    rowCount,
+    colCount,
+  ) {
+    this.rows = rowCount;
+    this.cols = colCount;
 
-export class GameField {
-  constructor(tileType) {
-    this.tileGrid = matrixOf(tileType);
+    this.tileGrid =
+      Array.from(Array(colCount),
+        (v, col) =>
+          Array.from(Array(rowCount),
+            (v, row) =>
+              new tileType(col, row)
+          )
+      );
+  }
+
+  getTilesAmount() {
+    return this.cols * this.rows;
+  }
+
+  getRandomTile() {
+    const random = max => Math.floor(Math.random() * max);
+
+    return this.get({
+      x: random(this.cols),
+      y: random(this.rows)
+    });
+  }
+
+  forEachTile(callback) {
+
+  }
+
+  getAdjacentTiles(location) {
+    return [];
   }
 
   get(location) {
