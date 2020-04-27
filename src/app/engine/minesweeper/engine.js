@@ -1,62 +1,26 @@
-import { TileGrid } from "../../types/common/game-field";
-import { MinesweeperTile } from "../../types/minesweeper/game-tile";
 import { EventEmitter } from "../../utils/event-emitter";
 import { GameEvents } from "../../const/common/game-events";
 import { MinesweeperEvents } from "../../const/minesweeper/events";
 import { TileState } from "../../const/minesweeper/tile-state";
-import { GridSize } from "../../const/minesweeper/grid-size";
-import { cloneDeep } from "lodash";
-
-const mine_ratio = 4.85;
+import { MinesweeperGrid } from "./grid";
 
 export class MinesweeperEngine extends EventEmitter {
   constructor() {
     super();
 
-    // both should be injected
-    this.gameState = new TileGrid(
-      MinesweeperTile,
-      GridSize.rows,
-      GridSize.cols,
-    );
+    this.gameGrid = new MinesweeperGrid();
 
     this.isGameOver = false;
   }
 
   initGameState(point) {
-    this.seedBombs(point);
-
-    this.setAdjacentBombCounts();
+    this.gameGrid.init(point);
 
     this.emitState(GameEvents.StateChanged);
   }
 
-  seedBombs(point) {
-    let bombAmount = Math.floor(this.gameState.getTilesAmount() / mine_ratio);
-
-    while (bombAmount) {
-      const tile = this.gameState.getRandomTile();
-
-      if (
-        !tile.locatedOn(point)
-        && !tile.hasBomb
-      ) {
-        tile.hasBomb = true;
-        bombAmount--;
-      }
-    }
-  }
-
-  setAdjacentBombCounts() {
-    this.gameState.forEachTile(tile =>
-      tile.adjacentBombs = this.gameState.getAdjacentTiles(tile)
-        .filter(tile => tile.hasBomb)
-        .length
-    );
-  }
-
   handleAction({ type, point }) {
-    const tile = this.gameState.get(point);
+    const tile = this.gameGrid.get(point);
 
     if (tile.isOpened()) {
       return;
@@ -89,7 +53,7 @@ export class MinesweeperEngine extends EventEmitter {
     if (tile.hasBomb) {
       this.isGameOver = true;
 
-      this.gameState.forEachTile(tile => tile.setOpened());
+      this.gameGrid.revealAll();
 
       return;
     }
@@ -112,7 +76,7 @@ export class MinesweeperEngine extends EventEmitter {
     }
   }
 
-  emitState(event){
-    this.emit(event, cloneDeep(this.gameState));
+  emitState(event) {
+    this.emit(event, this.gameGrid.getState());
   }
 }

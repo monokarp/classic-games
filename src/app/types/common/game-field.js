@@ -4,10 +4,7 @@ export class TileGrid {
     rowCount,
     colCount,
   ) {
-    this.rows = rowCount;
-    this.cols = colCount;
-
-    this.grid =
+    this.state =
       Array.from(Array(colCount),
         (v, col) =>
           Array.from(Array(rowCount),
@@ -17,21 +14,8 @@ export class TileGrid {
       );
   }
 
-  getTilesAmount() {
-    return this.cols * this.rows;
-  }
-
-  getRandomTile() {
-    const random = max => Math.floor(Math.random() * max);
-
-    return this.get({
-      x: random(this.cols),
-      y: random(this.rows)
-    });
-  }
-
   forEachTile(callback) {
-    this.grid.forEach(row =>
+    this.state.forEach(row =>
       row.forEach(tile => callback(tile))
     );
   }
@@ -45,10 +29,6 @@ export class TileGrid {
   }
 
   get(location) {
-    return this.grid[location.x][location.y];
-  }
-
-  set(location, newState) {
-    this.grid[location.x][location.y].state = newState;
+    return this.state[location.x][location.y];
   }
 };
