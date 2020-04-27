@@ -5,6 +5,7 @@ import { GameEvents } from "../../const/common/game-events";
 import { MinesweeperEvents } from "../../const/minesweeper/events";
 import { TileState } from "../../const/minesweeper/tile-state";
 import { GridSize } from "../../const/minesweeper/grid-size";
+import { cloneDeep } from "lodash";
 
 const mine_ratio = 4.85;
 
@@ -27,11 +28,11 @@ export class MinesweeperEngine extends EventEmitter {
 
     this.setAdjacentBombCounts();
 
-    this.emit(GameEvents.StateChanged, this.gameState);
+    this.emitState(GameEvents.StateChanged);
   }
 
   seedBombs(point) {
-    let bombAmount = this.gameState.getTilesAmount() / mine_ratio;
+    let bombAmount = Math.floor(this.gameState.getTilesAmount() / mine_ratio);
 
     while (bombAmount) {
       const tile = this.gameState.getRandomTile();
@@ -47,52 +48,71 @@ export class MinesweeperEngine extends EventEmitter {
   }
 
   setAdjacentBombCounts() {
-    this.gameState.forEachTile(location =>
-      this.gameState.get(location).adjacentBombs = this.gameState.getAdjacentTiles(location)
+    this.gameState.forEachTile(tile =>
+      tile.adjacentBombs = this.gameState.getAdjacentTiles(tile)
         .filter(tile => tile.hasBomb)
         .length
     );
   }
 
   handleAction({ type, point }) {
+    const tile = this.gameState.get(point);
+
+    if (tile.isOpened()) {
+      return;
+    }
+
     switch (type) {
       case MinesweeperEvents.Reveal: {
-        this.revealTile(point);
+        this.revealTile(tile);
         break;
       }
       case MinesweeperEvents.Mark: {
-        this.markTile(point);
+        this.markTile(tile);
         break;
       }
       default: return;
     }
 
-    this.isGameOver
-      ? this.emit(GameEvents.StateChanged, this.gameState)
-      : this.emit(GameEvents.GameOver);
+    if (this.isGameOver) {
+      this.emitState(GameEvents.GameOver);
+
+      this.clearListeners();
+
+      return;
+    }
+
+    this.emitState(GameEvents.StateChanged);
   }
 
-  revealTile(point) {
+  revealTile(tile) {
+    if (tile.hasBomb) {
+      this.isGameOver = true;
 
+      this.gameState.forEachTile(tile => tile.setOpened());
+
+      return;
+    }
+
+    if (tile.adjacentBombs) {
+      tile.setOpened();
+
+      return;
+    }
+
+    // safe cascade reveal
   }
 
-  markTile(point) {
-    const tile = this.gameState.get(point);
-
+  markTile(tile) {
     switch (tile.state) {
-      case TileState.Consealed: {
-        tile.state = TileState.Flagged;
-        return;
-      }
-      case TileState.Flagged: {
-        tile.state = TileState.Marked;
-        return;
-      }
-      case TileState.Marked: {
-        tile.state = TileState.Consealed;
-        return;
-      }
+      case TileState.Consealed: return tile.setFlagged();
+      case TileState.Flagged: return tile.setQuestioned();
+      case TileState.Questioned: return tile.setConsealed();
       default: return;
     }
+  }
+
+  emitState(event){
+    this.emit(event, cloneDeep(this.gameState));
   }
 }

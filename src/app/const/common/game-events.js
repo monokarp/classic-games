@@ -1,4 +1,4 @@
-export class GameEvents {
-  static StateChanged = 'state_changed';
-  static GameOver = 'game_over';
-}
+export const GameEvents = {
+  StateChanged: 'state_changed',
+  GameOver: 'game_over',
+};

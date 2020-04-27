@@ -15,4 +15,20 @@ export class MinesweeperTile {
   locatedOn(point) {
     return equalsShallow(this.location, point);
   }
+
+  isOpened() {
+    return this.state === TileState.Opened;
+  }
+
+  setOpen() {
+    this.state = TileState.Opened;
+  }
+
+  setFlagged() {
+    this.state = TileState.Flagged;
+  }
+
+  setQuestioned() {
+    this.state = TileState.Questioned;
+  }
 };

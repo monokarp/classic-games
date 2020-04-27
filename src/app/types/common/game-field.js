@@ -7,7 +7,7 @@ export class TileGrid {
     this.rows = rowCount;
     this.cols = colCount;
 
-    this.tileGrid =
+    this.grid =
       Array.from(Array(colCount),
         (v, col) =>
           Array.from(Array(rowCount),
@@ -31,18 +31,24 @@ export class TileGrid {
   }
 
   forEachTile(callback) {
-
+    this.grid.forEach(row =>
+      row.forEach(tile => callback(tile))
+    );
   }
 
-  getAdjacentTiles(location) {
-    return [];
+  getAdjacentTiles(tile) {
+    const tileRefs = [];
+
+
+
+    return tileRefs;
   }
 
   get(location) {
-    return this.tileGrid[location.x][location.y];
+    return this.grid[location.x][location.y];
   }
 
   set(location, newState) {
-    this.tileGrid[location.x][location.y].state = newState;
+    this.grid[location.x][location.y].state = newState;
   }
 };
