@@ -1,5 +1,7 @@
 import { MinesweeperGrid } from "./grid";
 import { GridSize } from "../../const/minesweeper/grid-size";
+import { isEqual } from "lodash";
+import { TileState } from "../../const/minesweeper/tile-state";
 
 describe('MinesweeperGrid', () => {
   let grid;
@@ -8,43 +10,67 @@ describe('MinesweeperGrid', () => {
     grid = new MinesweeperGrid();
   });
 
-  it('should init game state', () => {
-    const defaultState = grid.getState();
+  describe('init', () => {
+    it('should init game state', () => {
+      grid.init({ x: 0, y: 0 });
 
-    expect(defaultState.length).toEqual(GridSize.cols);
+      const state = grid.getState();
 
-    expect(defaultState.every(row => row.length === GridSize.rows)).toEqual(true);
-  });
+      expect(state.length).toEqual(GridSize.cols);
 
-  it('should seed bombs', () => {
-    const location = { x: 5, y: 3 };
-    let bombCount = 0;
-
-    grid.init(location);
-
-    grid.forEachTile(tile => {
-      if (tile.hasBomb) {
-        bombCount++;
-      }
+      expect(state.every(row => row.length === GridSize.rows)).toEqual(true);
     });
 
-    expect(bombCount).toBeGreaterThan(GridSize.rows * GridSize.cols / 5);
+    it('should seed bombs', () => {
+      const location = { x: 5, y: 3 };
+      let bombCount = 0;
 
-    expect(grid.get(location).hasBomb).toEqual(false);
+      grid.init(location);
+
+      grid.forEachTile(tile => {
+        if (tile.hasBomb) {
+          bombCount++;
+        }
+      });
+
+      expect(bombCount).toBeGreaterThan(GridSize.rows * GridSize.cols / 5);
+
+      expect(grid.get(location).hasBomb).toEqual(false);
+    });
+
+    it('should set adjacent bomb counts', () => {
+      grid.init({ x: 8, y: 3 });
+
+      grid.forEachTile(tile => {
+        expect(tile.adjacentBombs).toEqual(
+          grid.getAdjacentTiles(tile)
+            .reduce((total, next) =>
+              total + (next.hasBomb ? 1 : 0),
+              0)
+        );
+      });
+    });
   });
 
-  it('should set adjacent bomb counts', () => {
-    const location = { x: 8, y: 3 };
+  describe('getState', () => {
+    it('should not modify internal state', () => {
+      grid.init({ x: 0, y: 0 });
 
-    grid.init(location);
+      const state = grid.getState();
 
-    grid.forEachTile(tile => {
-      expect(tile.adjacentBombs).toEqual(
-        grid.getAdjacentTiles(tile)
-          .reduce((total, next) =>
-            total + next.hasBomb ? 1 : 0,
-            0)
-      );
+      state[0][0] = { test: 'test' };
+
+      expect(isEqual(grid.getState()[0][0], state[0][0])).toEqual(false);
+    });
+  });
+
+  describe('revealAll', () => {
+    it('should set all tile states to open', () => {
+      grid.init({ x: 0, y: 0 });
+
+      grid.revealAll();
+
+      grid.forEachTile(tile => expect(tile.state).toEqual(TileState.Opened));
     });
   });
 });

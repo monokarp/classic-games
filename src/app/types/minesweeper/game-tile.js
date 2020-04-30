@@ -20,7 +20,7 @@ export class MinesweeperTile {
     return this.state === TileState.Opened;
   }
 
-  setOpen() {
+  setOpened() {
     this.state = TileState.Opened;
   }
 

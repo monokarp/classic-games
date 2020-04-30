@@ -29,8 +29,8 @@ export class MinesweeperGrid extends TileGrid {
 
     const allLocations = [];
 
-    for (let i = 0; i++; i < GridSize.rows) {
-      for (let j = 0; j++; j < GridSize.cols) {
+    for (let i = 0; i < GridSize.rows; i++) {
+      for (let j = 0; j < GridSize.cols; j++) {
         allLocations.push({ x: j, y: i });
       }
     }
@@ -38,7 +38,7 @@ export class MinesweeperGrid extends TileGrid {
     let randomLocation;
 
     while (bombAmount) {
-      randomLocation = allLocations.splice(Math.floor(Math.random() * allLocations.length));
+      randomLocation = allLocations.splice(Math.floor(Math.random() * allLocations.length),1)[0];
 
       if (isEqual(randomLocation, point)) { continue; }
 
@@ -52,7 +52,7 @@ export class MinesweeperGrid extends TileGrid {
   setAdjacentBombCounts() {
     this.forEachTile(tile =>
       tile.adjacentBombs = this.getAdjacentTiles(tile)
-        .filter(tile => tile.hasBomb)
+        .filter(adjacent => adjacent.hasBomb)
         .length
     );
   }
