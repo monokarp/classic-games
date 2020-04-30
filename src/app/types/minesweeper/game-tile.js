@@ -1,5 +1,5 @@
 import { TileState } from '../../const/minesweeper/tile-state.js';
-import { equalsShallow } from '../../utils/equals.js';
+import { isEqual } from 'lodash';
 
 export class MinesweeperTile {
   constructor(x, y) {
@@ -9,11 +9,11 @@ export class MinesweeperTile {
 
     this.adjacentBombs = 0;
 
-    this.state = TileState.Consealed;
+    this.state = TileState.Concealed;
   }
 
   locatedOn(point) {
-    return equalsShallow(this.location, point);
+    return isEqual(this.location, point);
   }
 
   isOpened() {

@@ -1,4 +1,4 @@
-import { TileGrid } from "../../types/common/game-field";
+import { TileGrid } from "../../types/common/tile-grid";
 import { MinesweeperTile } from "../../types/minesweeper/game-tile";
 import { GridSize } from "../../const/minesweeper/grid-size";
 import { cloneDeep, isEqual } from "lodash";

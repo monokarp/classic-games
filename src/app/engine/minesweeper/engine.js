@@ -69,7 +69,7 @@ export class MinesweeperEngine extends EventEmitter {
 
   markTile(tile) {
     switch (tile.state) {
-      case TileState.Consealed: return tile.setFlagged();
+      case TileState.Concealed: return tile.setFlagged();
       case TileState.Flagged: return tile.setQuestioned();
       case TileState.Questioned: return tile.setConsealed();
       default: return;
