@@ -20,6 +20,10 @@ export class MinesweeperTile {
     return this.state === TileState.Opened;
   }
 
+  isConcealed() {
+    return this.state === TileState.Concealed;
+  }
+
   isFlagged() {
     return this.state === TileState.Flagged;
   }
@@ -36,7 +40,7 @@ export class MinesweeperTile {
     this.adjacentBombs = count;
   }
 
-  markTile() {
+  toggleFlag() {
     switch (this.state) {
       case TileState.Concealed: {
         this.state = TileState.Flagged;

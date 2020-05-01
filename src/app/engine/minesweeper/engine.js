@@ -26,32 +26,34 @@ export class MinesweeperEngine extends EventEmitter {
     this.getActionHandler(type)(tile);
 
     if (this.isGameOver) {
-      this.emitState(GameEvents.GameOver);
+      this.emitState(GameEvents.GameLost);
 
       this.clearListeners();
 
       return;
     }
 
-    this.emitState(GameEvents.StateChanged);
+    this.emitState(
+      this.gameGrid.concealedTilesCount
+        ? GameEvents.StateChanged
+        : GameEvents.GameWon
+    );
   }
 
   getActionHandler(type) {
     switch (type) {
       case MinesweeperEvents.Reveal:
         return tile => this.revealTile(tile);
-      case MinesweeperEvents.RevealAdjacent:
-        return tile => this.revealAdjacent(tile);
-      case MinesweeperEvents.Mark:
-        return tile => tile.markTile();
+      case MinesweeperEvents.BatchReveal:
+        return tile => this.batchRevealTile(tile);
+      case MinesweeperEvents.Flag:
+        return tile => tile.toggleFlag();
       default: return () => { };
     }
   }
 
   revealTile(tile) {
-    if (tile.isOpened()) {
-      return;
-    }
+    if (!tile.isConcealed()) { return; }
 
     if (tile.hasBomb) {
       this.isGameOver = true;
@@ -61,34 +63,28 @@ export class MinesweeperEngine extends EventEmitter {
       return;
     }
 
-    if (tile.adjacentBombs) {
-      tile.setOpened();
+    this.gameGrid.revealOne(tile);
 
-      return;
+    if (!tile.adjacentBombs) {
+      this.gameGrid.getAdjacentTiles(tile)
+        .filter(adjacent => adjacent.isConcealed())
+        .forEach(adjacent => this.revealTile(adjacent));
     }
-
-    this.cascadeReveal(tile);
   }
 
-  cascadeReveal(tile) {
-    tile.setOpened();
-
-    this.gameGrid.getAdjacentTiles(tile)
-      .filter(adjacent => !adjacent.isOpened())
-      .forEach(adjacent =>
-        adjacent.isEmpty()
-          ? this.cascadeReveal(adjacent)
-          : adjacent.setOpened()
-      );
-  }
-
-  revealAdjacent(tile) {
+  batchRevealTile(tile) {
     const adjacentTiles = this.gameGrid.getAdjacentTiles(tile);
 
     const adjacentFlagged = adjacentTiles.filter(adjacent => adjacent.isFlagged());
 
     if (tile.adjacentBombs === adjacentFlagged.length) {
-      adjacentTiles.forEach(adjacent => this.revealTile(adjacent));
+      adjacentTiles.forEach(adjacent => {
+        if (adjacent.hasBomb && adjacent.isFlagged()) {
+          return;
+        }
+
+        this.revealTile(adjacent);
+      });
     }
   }
 

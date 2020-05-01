@@ -39,6 +39,8 @@ describe('MinesweeperGrid', () => {
 
       expect(bombCount).toBeGreaterThanOrEqual(Math.floor((rowCount * colCount) / testRatio));
 
+      expect(grid.concealedTilesCount).toEqual((rowCount * colCount) - bombCount);
+
       expect(grid.get(location).hasBomb).toEqual(false);
     });
 

@@ -5,6 +5,8 @@ const mineRatio = 4.85;
 
 export class MinesweeperGrid extends TileGrid {
   init(point) {
+    this.concealedTilesCount = 0;
+
     this.seedBombs(point);
 
     this.setAdjacentBombCounts();
@@ -15,7 +17,11 @@ export class MinesweeperGrid extends TileGrid {
   }
 
   seedBombs(point) {
+    const tileCount = this.size.rowCount * this.size.colCount;
+
     let bombAmount = Math.floor((this.size.rowCount * this.size.colCount) / mineRatio);
+
+    this.concealedTilesCount = tileCount - bombAmount;
 
     const tilesList = [];
 
@@ -44,6 +50,12 @@ export class MinesweeperGrid extends TileGrid {
   }
 
   revealAll() {
+    this.concealedTilesCount = 0;
     this.forEachTile(tile => tile.setOpened());
+  }
+
+  revealOne(tile) {
+    this.concealedTilesCount--;
+    tile.setOpened();
   }
 }

@@ -14,5 +14,5 @@ export function setup(gameType) {
 
   engine.addListener(GameEvents.StateChanged, renderer.renderState);
 
-  engine.addListener(GameEvents.GameOver, renderer.renderGameOver);
+  engine.addListener(GameEvents.GameLost, renderer.renderGameOver);
 }
