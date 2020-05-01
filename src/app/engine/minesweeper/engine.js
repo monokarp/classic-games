@@ -81,6 +81,7 @@ export class MinesweeperEngine extends EventEmitter {
     tile.setOpened();
 
     this.gameGrid.getAdjacentTiles(tile)
+      .filter(adjacent => !adjacent.isOpened())
       .forEach(adjacent =>
         adjacent.isEmpty()
           ? this.cascadeReveal(adjacent)
