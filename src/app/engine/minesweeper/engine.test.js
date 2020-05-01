@@ -2,13 +2,27 @@ import { GameEvents } from '../../const/common/game-events';
 import { GridSize } from '../../const/minesweeper/grid-size';
 import { MinesweeperEngine } from './engine';
 import { MinesweeperEvents } from '../../const/minesweeper/events';
+import { MinesweeperGrid } from './grid';
+import { MinesweeperTile } from '../../types/minesweeper/game-tile';
 import { TileState } from '../../const/minesweeper/tile-state';
+
+class TestGrid extends MinesweeperGrid {
+  seedBombs() {
+    this.state[5][5].hasBomb = true;
+  }
+}
 
 describe('MinesweeperEngine', () => {
   let engine;
 
   beforeEach(() => {
-    engine = new MinesweeperEngine();
+    engine = new MinesweeperEngine(
+      new TestGrid(
+        MinesweeperTile,
+        GridSize.rows,
+        GridSize.cols
+      )
+    );
   });
 
   it('should emit events', (done) => {
@@ -40,11 +54,25 @@ describe('MinesweeperEngine', () => {
 
   describe('actions', () => {
     describe('reveal', () => {
+      it('should open a closed tile', () => {
 
+      });
+
+      it('should abort on an opened tile', () => {
+
+      });
+
+      it('should trigger cascade reveal', () => {
+
+      });
+
+      it('should trigger game over', () => {
+
+      });
     });
 
     describe('reveal adjacent', () => {
-      it('should flag closed tile', () => {
+      it('should abort unless expected adjacent bombs are marked', () => {
 
       });
     });

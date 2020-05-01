@@ -1,19 +1,12 @@
 import { EventEmitter } from '../../utils/event-emitter';
 import { GameEvents } from '../../const/common/game-events';
-import { GridSize } from '../../const/minesweeper/grid-size';
 import { MinesweeperEvents } from '../../const/minesweeper/events';
-import { MinesweeperGrid } from './grid';
-import { MinesweeperTile } from '../../types/minesweeper/game-tile';
 
 export class MinesweeperEngine extends EventEmitter {
-  constructor() {
+  constructor(gameGrid) {
     super();
 
-    this.gameGrid = new MinesweeperGrid(
-      MinesweeperTile,
-      GridSize.rows,
-      GridSize.cols
-    );
+    this.gameGrid = gameGrid;
 
     this.isGameOver = false;
   }
