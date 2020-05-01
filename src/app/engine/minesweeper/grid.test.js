@@ -1,13 +1,17 @@
-import { GridSize } from '../../const/minesweeper/grid-size';
 import { MinesweeperGrid } from './grid';
+import { MinesweeperTile } from '../../types/minesweeper/game-tile';
 import { TileState } from '../../const/minesweeper/tile-state';
 import { isEqual } from 'lodash';
+
+const rowCount = 3;
+const colCount = 5;
+const testRatio = 5;
 
 describe('MinesweeperGrid', () => {
   let grid;
 
   beforeEach(() => {
-    grid = new MinesweeperGrid();
+    grid = new MinesweeperGrid(MinesweeperTile, rowCount, colCount);
   });
 
   describe('init', () => {
@@ -16,13 +20,13 @@ describe('MinesweeperGrid', () => {
 
       const state = grid.getState();
 
-      expect(state.length).toEqual(GridSize.cols);
+      expect(state.length).toEqual(rowCount);
 
-      expect(state.every(row => row.length === GridSize.rows)).toEqual(true);
+      expect(state.every(row => row.length === colCount)).toEqual(true);
     });
 
     it('should seed bombs', () => {
-      const location = { x: 5, y: 3 };
+      const location = { x: 2, y: 4 };
       let bombCount = 0;
 
       grid.init(location);
@@ -33,13 +37,13 @@ describe('MinesweeperGrid', () => {
         }
       });
 
-      expect(bombCount).toBeGreaterThan((GridSize.rows * GridSize.cols) / 5);
+      expect(bombCount).toBeGreaterThanOrEqual(Math.floor((rowCount * colCount) / testRatio));
 
       expect(grid.get(location).hasBomb).toEqual(false);
     });
 
     it('should set adjacent bomb counts', () => {
-      grid.init({ x: 8, y: 3 });
+      grid.init({ x: 1, y: 3 });
 
       grid.forEachTile(tile => {
         expect(tile.adjacentBombs).toEqual(

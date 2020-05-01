@@ -1,13 +1,19 @@
 import { EventEmitter } from '../../utils/event-emitter';
 import { GameEvents } from '../../const/common/game-events';
+import { GridSize } from '../../const/minesweeper/grid-size';
 import { MinesweeperEvents } from '../../const/minesweeper/events';
 import { MinesweeperGrid } from './grid';
+import { MinesweeperTile } from '../../types/minesweeper/game-tile';
 
 export class MinesweeperEngine extends EventEmitter {
   constructor() {
     super();
 
-    this.gameGrid = new MinesweeperGrid();
+    this.gameGrid = new MinesweeperGrid(
+      MinesweeperTile,
+      GridSize.rows,
+      GridSize.cols
+    );
 
     this.isGameOver = false;
   }
@@ -15,27 +21,16 @@ export class MinesweeperEngine extends EventEmitter {
   initGameState(point) {
     this.gameGrid.init(point);
 
-    this.emitState(GameEvents.StateChanged);
+    this.processAction({
+      type: MinesweeperEvents.Reveal,
+      point
+    });
   }
 
-  handleAction({ type, point }) {
+  processAction({ type, point }) {
     const tile = this.gameGrid.get(point);
 
-    if (tile.isOpened()) {
-      return;
-    }
-
-    switch (type) {
-      case MinesweeperEvents.Reveal: {
-        this.revealTile(tile);
-        break;
-      }
-      case MinesweeperEvents.Mark: {
-        tile.markTile();
-        break;
-      }
-      default: return;
-    }
+    this.getActionHandler(type)(tile);
 
     if (this.isGameOver) {
       this.emitState(GameEvents.GameOver);
@@ -48,7 +43,23 @@ export class MinesweeperEngine extends EventEmitter {
     this.emitState(GameEvents.StateChanged);
   }
 
+  getActionHandler(type) {
+    switch (type) {
+      case MinesweeperEvents.Reveal:
+        return tile => this.revealTile(tile);
+      case MinesweeperEvents.RevealAdjacent:
+        return tile => this.revealAdjacent(tile);
+      case MinesweeperEvents.Mark:
+        return tile => tile.markTile();
+      default: return () => { };
+    }
+  }
+
   revealTile(tile) {
+    if (tile.isOpened()) {
+      return;
+    }
+
     if (tile.hasBomb) {
       this.isGameOver = true;
 
@@ -63,7 +74,22 @@ export class MinesweeperEngine extends EventEmitter {
       return;
     }
 
-    // safe cascade reveal
+    this.cascadeReveal(tile);
+  }
+
+  cascadeReveal(tile) {
+    tile.setOpened();
+
+    this.gameGrid.getAdjacentTiles(tile)
+      .forEach(adjacent =>
+        adjacent.isEmpty()
+          ? this.cascadeReveal(adjacent)
+          : adjacent.setOpened()
+      );
+  }
+
+  revealAdjacent(tile) {
+    this.gameGrid.getAdjacentTiles(tile).forEach(adjacent => this.revealTile(adjacent));
   }
 
   emitState(event) {

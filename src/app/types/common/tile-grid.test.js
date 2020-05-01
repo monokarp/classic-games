@@ -13,6 +13,13 @@ describe('TileGrid', () => {
     grid = new TileGrid(TestTile, 2, 2);
   });
 
+  it('should init state', () => {
+    grid = new TileGrid(TestTile, 3, 6);
+
+    expect(grid.state.length).toEqual(3);
+    grid.state.forEach(row => expect(row.length).toEqual(6));
+  });
+
   describe('forEachTile', () => {
     it('should visit every tile', () => {
       let result = '';

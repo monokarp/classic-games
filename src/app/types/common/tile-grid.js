@@ -9,11 +9,11 @@ export class TileGrid {
     this.size = { rowCount, colCount };
 
     this.state =
-      Array.from(Array(colCount),
-        (v, col) =>
-          Array.from(Array(rowCount),
-            (_v, row) =>
-              new tileType(col, row)
+      Array.from(Array(rowCount),
+        (v, row) =>
+          Array.from(Array(colCount),
+            (_v, col) =>
+              new tileType(row, col)
           )
       );
   }
@@ -52,7 +52,7 @@ export class TileGrid {
   outOfRange({ x, y }) {
     return x < 0
       || y < 0
-      || x > this.size.colCount
-      || y > this.size.rowCount;
+      || x >= this.size.rowCount
+      || y >= this.size.colCount;
   }
 }

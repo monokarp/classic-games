@@ -34,6 +34,7 @@
         "import/order": "off",
         "function-paren-newline": "off",
         "new-cap": "off",
-        "operator-linebreak": "off"
+        "operator-linebreak": "off",
+        "no-confusing-arrow":"off"
     }
 }

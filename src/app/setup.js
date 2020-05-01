@@ -1,7 +1,7 @@
+import { GameEvents } from './const/common/game-events';
 import { createEngine } from './engine/create-engine';
 import { createInputController } from './input-controller/create-input-controller';
 import { createRenderer } from './renderer/create-renderer';
-import { GameEvents } from './const/common/game-events';
 
 export function setup(gameType) {
   const inputController = createInputController(gameType);
@@ -10,7 +10,7 @@ export function setup(gameType) {
 
   inputController.onStart(engine.initGameState);
 
-  inputController.onPlayerAction(engine.handleAction);
+  inputController.onPlayerAction(engine.processAction);
 
   engine.addListener(GameEvents.StateChanged, renderer.renderState);
 

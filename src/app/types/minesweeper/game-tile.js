@@ -20,6 +20,10 @@ export class MinesweeperTile {
     return this.state === TileState.Opened;
   }
 
+  isEmpty() {
+    return !this.hasBomb && !this.adjacentBombs;
+  }
+
   setOpened() {
     this.state = TileState.Opened;
   }
