@@ -8,7 +8,7 @@ import { TileState } from '../../const/minesweeper/tile-state';
 
 class TestGrid extends MinesweeperGrid {
   seedBombs() {
-    this.state[5][5].hasBomb = true;
+    this.state[0][3].hasBomb = true;
   }
 }
 
@@ -54,25 +54,112 @@ describe('MinesweeperEngine', () => {
 
   describe('actions', () => {
     describe('reveal', () => {
-      it('should open a closed tile', () => {
+      it('should open a closed tile', (done) => {
+        const point = { x: 1, y: 2 };
 
+        engine.initGameState({ x: 0, y: 2 });
+
+        engine.addListener(GameEvents.StateChanged, state => {
+          for (let i = 0; i < GridSize.rows; i++) {
+            for (let j = 0; j < GridSize.cols; j++) {
+              let expectedState;
+
+              if ([0, 1].includes(i) && j === 2) {
+                expectedState = {
+                  hasBomb: false,
+                  adjacentBombs: 1,
+                  state: TileState.Opened
+                };
+              } else {
+                expectedState = {
+                  state: TileState.Concealed
+                };
+              }
+
+              expect(state[i][j]).toMatchObject(expectedState);
+            }
+          }
+
+          done();
+        });
+
+        engine.processAction({ type: MinesweeperEvents.Reveal, point });
       });
 
-      it('should abort on an opened tile', () => {
+      it('should trigger cascade reveal', (done) => {
+        engine.initGameState({ x: 0, y: 2 });
 
+        engine.addListener(GameEvents.StateChanged, state => {
+          // let out = '';
+          // for (let i = 0; i < GridSize.rows; i++) {
+          //   for (let j = 0; j < GridSize.cols; j++) {
+          //     out += state[i][j].adjacentBombs;
+          //   }
+          //   out += '\n';
+          // }
+          // console.log(out);
+
+          for (let i = 0; i < GridSize.rows; i++) {
+            for (let j = 0; j < GridSize.cols; j++) {
+              let expectedState;
+
+              if (i === 0 && j === 3) {
+                expectedState = {
+                  hasBomb: true,
+                  adjacentBombs: 0,
+                  state: TileState.Concealed
+                };
+              } else if ([0, 1].includes(i) && [2, 3, 4].includes(j)) {
+                expectedState = {
+                  hasBomb: false,
+                  adjacentBombs: 1,
+                  state: TileState.Opened
+                };
+              } else {
+                expectedState = {
+                  hasBomb: false,
+                  adjacentBombs: 0,
+                  state: TileState.Opened
+                };
+              }
+
+              expect(state[i][j]).toMatchObject(expectedState);
+            }
+          }
+
+          done();
+        });
+
+        engine.processAction({ type: MinesweeperEvents.Reveal, point: { x: 0, y: 0 } });
       });
 
-      it('should trigger cascade reveal', () => {
+      it('should trigger game over', (done) => {
+        engine.initGameState({ x: 0, y: 2 });
 
-      });
+        engine.addListener(GameEvents.GameOver, state => {
+          for (let i = 0; i < GridSize.rows; i++) {
+            for (let j = 0; j < GridSize.cols; j++) {
+              expect(state[i][j]).toMatchObject({ state: TileState.Opened });
+            }
+          }
 
-      it('should trigger game over', () => {
+          done();
+        });
 
+        engine.processAction({ type: MinesweeperEvents.Reveal, point: { x: 0, y: 3 } });
       });
     });
 
     describe('reveal adjacent', () => {
       it('should abort unless expected adjacent bombs are marked', () => {
+
+      });
+
+      it('should reveal adjacent tiles', () => {
+
+      });
+
+      it('should trigger game over', () => {
 
       });
     });
@@ -103,23 +190,8 @@ describe('MinesweeperEngine', () => {
         });
       });
 
-      it('should question mark a flagged tile', (done) => {
+      it('should conceal mark a flagged tile', (done) => {
         const point = { x: 0, y: 0 };
-
-        engine.processAction({ type: MinesweeperEvents.Mark, point });
-
-        engine.addListener(GameEvents.StateChanged, state => {
-          expect(state[0][0]).toMatchObject({ state: TileState.Questioned });
-          done();
-        });
-
-        engine.processAction({ type: MinesweeperEvents.Mark, point });
-      });
-
-      it('should conceal a question mark tile', (done) => {
-        const point = { x: 0, y: 0 };
-
-        engine.processAction({ type: MinesweeperEvents.Mark, point });
 
         engine.processAction({ type: MinesweeperEvents.Mark, point });
 

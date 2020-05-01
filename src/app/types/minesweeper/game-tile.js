@@ -20,6 +20,10 @@ export class MinesweeperTile {
     return this.state === TileState.Opened;
   }
 
+  isFlagged() {
+    return this.state === TileState.Flagged;
+  }
+
   isEmpty() {
     return !this.hasBomb && !this.adjacentBombs;
   }
@@ -39,10 +43,6 @@ export class MinesweeperTile {
         break;
       }
       case TileState.Flagged: {
-        this.state = TileState.Questioned;
-        break;
-      }
-      case TileState.Questioned: {
         this.state = TileState.Concealed;
         break;
       }

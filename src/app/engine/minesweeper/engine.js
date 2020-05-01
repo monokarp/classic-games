@@ -83,7 +83,13 @@ export class MinesweeperEngine extends EventEmitter {
   }
 
   revealAdjacent(tile) {
-    this.gameGrid.getAdjacentTiles(tile).forEach(adjacent => this.revealTile(adjacent));
+    const adjacentTiles = this.gameGrid.getAdjacentTiles(tile);
+
+    const adjacentFlagged = adjacentTiles.filter(adjacent => adjacent.isFlagged());
+
+    if (tile.adjacentBombs === adjacentFlagged.length) {
+      adjacentTiles.forEach(adjacent => this.revealTile(adjacent));
+    }
   }
 
   emitState(event) {

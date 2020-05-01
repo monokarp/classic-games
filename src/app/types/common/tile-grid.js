@@ -31,7 +31,7 @@ export class TileGrid {
 
     for (let i = x - 1; i <= x + 1; i++) {
       for (let j = y - 1; j <= y + 1; j++) {
-        const currentLocation = { x: j, y: i };
+        const currentLocation = { x: i, y: j };
 
         if (
           !this.outOfRange(currentLocation)
