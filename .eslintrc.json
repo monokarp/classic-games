@@ -2,7 +2,8 @@
     "env": {
         "commonjs": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "jest": true
     },
     "extends": [
         "airbnb-base"
@@ -15,5 +16,24 @@
         "ecmaVersion": 2018
     },
     "rules": {
+        "comma-dangle": [
+            "error",
+            {
+                "arrays": "only-multiline",
+                "objects": "only-multiline",
+                "imports": "only-multiline",
+                "exports": "only-multiline",
+                "functions": "never"
+            }
+        ],
+        "implicit-arrow-linebreak": "off",
+        "import/prefer-default-export": "off",
+        "linebreak-style": "off",
+        "no-plusplus": "off",
+        "arrow-parens": "off",
+        "import/order": "off",
+        "function-paren-newline": "off",
+        "new-cap": "off",
+        "operator-linebreak": "off"
     }
 }

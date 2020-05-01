@@ -1,7 +1,7 @@
-import { MinesweeperGrid } from "./grid";
-import { GridSize } from "../../const/minesweeper/grid-size";
-import { isEqual } from "lodash";
-import { TileState } from "../../const/minesweeper/tile-state";
+import { GridSize } from '../../const/minesweeper/grid-size';
+import { MinesweeperGrid } from './grid';
+import { TileState } from '../../const/minesweeper/tile-state';
+import { isEqual } from 'lodash';
 
 describe('MinesweeperGrid', () => {
   let grid;
@@ -33,7 +33,7 @@ describe('MinesweeperGrid', () => {
         }
       });
 
-      expect(bombCount).toBeGreaterThan(GridSize.rows * GridSize.cols / 5);
+      expect(bombCount).toBeGreaterThan((GridSize.rows * GridSize.cols) / 5);
 
       expect(grid.get(location).hasBomb).toEqual(false);
     });
@@ -45,8 +45,7 @@ describe('MinesweeperGrid', () => {
         expect(tile.adjacentBombs).toEqual(
           grid.getAdjacentTiles(tile)
             .reduce((total, next) =>
-              total + (next.hasBomb ? 1 : 0),
-              0)
+              total + (next.hasBomb ? 1 : 0), 0)
         );
       });
     });

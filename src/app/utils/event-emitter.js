@@ -21,6 +21,7 @@ export class EventEmitter {
 
   clearListeners() {
     if (this.listenersMap) {
+      // eslint-disable-next-line
       Object.values(this.listenersMap).forEach(array => array = null);
     }
   }

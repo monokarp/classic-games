@@ -1,8 +1,7 @@
-import { EventEmitter } from "../../utils/event-emitter";
-import { GameEvents } from "../../const/common/game-events";
-import { MinesweeperEvents } from "../../const/minesweeper/events";
-import { TileState } from "../../const/minesweeper/tile-state";
-import { MinesweeperGrid } from "./grid";
+import { EventEmitter } from '../../utils/event-emitter';
+import { GameEvents } from '../../const/common/game-events';
+import { MinesweeperEvents } from '../../const/minesweeper/events';
+import { MinesweeperGrid } from './grid';
 
 export class MinesweeperEngine extends EventEmitter {
   constructor() {
@@ -32,7 +31,7 @@ export class MinesweeperEngine extends EventEmitter {
         break;
       }
       case MinesweeperEvents.Mark: {
-        this.markTile(tile);
+        tile.markTile();
         break;
       }
       default: return;
@@ -65,15 +64,6 @@ export class MinesweeperEngine extends EventEmitter {
     }
 
     // safe cascade reveal
-  }
-
-  markTile(tile) {
-    switch (tile.state) {
-      case TileState.Concealed: return tile.setFlagged();
-      case TileState.Flagged: return tile.setQuestioned();
-      case TileState.Questioned: return tile.setConsealed();
-      default: return;
-    }
   }
 
   emitState(event) {

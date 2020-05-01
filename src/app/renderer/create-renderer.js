@@ -1,4 +1,4 @@
-import { MinesweeperBrowserRenderer } from "./minesweeper/renderer";
+import { MinesweeperBrowserRenderer } from './minesweeper/renderer';
 
 export function createRenderer(gameType) {
   switch (gameType) {

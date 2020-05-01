@@ -1,4 +1,4 @@
-import { GameEvents } from "../common/game-events";
+import { GameEvents } from '../common/game-events';
 
 export const MinesweeperEvents = {
   ...GameEvents,

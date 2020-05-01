@@ -1,4 +1,4 @@
-import { TileState } from '../../const/minesweeper/tile-state.js';
+import { TileState } from '../../const/minesweeper/tile-state';
 import { isEqual } from 'lodash';
 
 export class MinesweeperTile {
@@ -24,11 +24,25 @@ export class MinesweeperTile {
     this.state = TileState.Opened;
   }
 
-  setFlagged() {
-    this.state = TileState.Flagged;
+  setAdjacent(count) {
+    this.adjacentBombs = count;
   }
 
-  setQuestioned() {
-    this.state = TileState.Questioned;
+  markTile() {
+    switch (this.state) {
+      case TileState.Concealed: {
+        this.state = TileState.Flagged;
+        break;
+      }
+      case TileState.Flagged: {
+        this.state = TileState.Questioned;
+        break;
+      }
+      case TileState.Questioned: {
+        this.state = TileState.Concealed;
+        break;
+      }
+      default: break;
+    }
   }
-};
+}

@@ -1,4 +1,4 @@
-import { MinesweeperEvents } from "../../const/minesweeper/events";
+import { MinesweeperEvents } from '../../const/minesweeper/events';
 
 export class MinesweeperInputController {
   constructor() {

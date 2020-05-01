@@ -1,4 +1,4 @@
-import { MinesweeperInputController } from "./minesweeper/cointroller";
+import { MinesweeperInputController } from './minesweeper/cointroller';
 
 export function createInputController(gameType) {
   switch (gameType) {

@@ -1,3 +1,3 @@
-import { setup } from './app/setup.js';
+import { setup } from './app/setup';
 
 setup('minesweeper');

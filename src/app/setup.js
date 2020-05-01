@@ -1,7 +1,7 @@
-import { createEngine } from "./engine/create-engine";
-import { createInputController } from "./input-controller/create-input-controller";
-import { createRenderer } from "./renderer/create-renderer";
-import { GameEvents } from "./const/common/game-events";
+import { createEngine } from './engine/create-engine';
+import { createInputController } from './input-controller/create-input-controller';
+import { createRenderer } from './renderer/create-renderer';
+import { GameEvents } from './const/common/game-events';
 
 export function setup(gameType) {
   const inputController = createInputController(gameType);
@@ -15,4 +15,4 @@ export function setup(gameType) {
   engine.addListener(GameEvents.StateChanged, renderer.renderState);
 
   engine.addListener(GameEvents.GameOver, renderer.renderGameOver);
-};
+}

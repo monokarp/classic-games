@@ -1,16 +1,16 @@
-import { TileGrid } from "../../types/common/tile-grid";
-import { MinesweeperTile } from "../../types/minesweeper/game-tile";
-import { GridSize } from "../../const/minesweeper/grid-size";
-import { cloneDeep, isEqual } from "lodash";
+import { GridSize } from '../../const/minesweeper/grid-size';
+import { MinesweeperTile } from '../../types/minesweeper/game-tile';
+import { TileGrid } from '../../types/common/tile-grid';
+import { cloneDeep } from 'lodash';
 
-const mine_ratio = 4.85;
+const mineRatio = 4.85;
 
 export class MinesweeperGrid extends TileGrid {
   constructor() {
     super(
       MinesweeperTile,
       GridSize.rows,
-      GridSize.cols,
+      GridSize.cols
     );
   }
 
@@ -25,36 +25,30 @@ export class MinesweeperGrid extends TileGrid {
   }
 
   seedBombs(point) {
-    let bombAmount = Math.floor(GridSize.cols * GridSize.rows / mine_ratio);
+    let bombAmount = Math.floor((GridSize.cols * GridSize.rows) / mineRatio);
 
     const allLocations = [];
 
-    for (let i = 0; i < GridSize.rows; i++) {
-      for (let j = 0; j < GridSize.cols; j++) {
-        allLocations.push({ x: j, y: i });
-      }
-    }
-
-    let randomLocation;
+    this.forEachTile(tile => allLocations.push(tile));
 
     while (bombAmount) {
-      randomLocation = allLocations.splice(Math.floor(Math.random() * allLocations.length),1)[0];
+      const tile = allLocations.splice(Math.floor(Math.random() * allLocations.length), 1)[0];
 
-      if (isEqual(randomLocation, point)) { continue; }
-
-      const tile = this.get(randomLocation);
-
-      tile.hasBomb = true;
-      bombAmount--;
+      if (!tile.locatedOn(point)) {
+        tile.hasBomb = true;
+        bombAmount--;
+      }
     }
   }
 
   setAdjacentBombCounts() {
-    this.forEachTile(tile =>
-      tile.adjacentBombs = this.getAdjacentTiles(tile)
+    this.forEachTile(tile => {
+      const count = this.getAdjacentTiles(tile)
         .filter(adjacent => adjacent.hasBomb)
-        .length
-    );
+        .length;
+
+      tile.setAdjacent(count);
+    });
   }
 
   revealAll() {

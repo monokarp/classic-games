@@ -1,10 +1,10 @@
-import { isEqual } from "lodash";
+import { isEqual } from 'lodash';
 
 export class TileGrid {
   constructor(
     tileType,
     rowCount,
-    colCount,
+    colCount
   ) {
     this.size = { rowCount, colCount };
 
@@ -12,7 +12,7 @@ export class TileGrid {
       Array.from(Array(colCount),
         (v, col) =>
           Array.from(Array(rowCount),
-            (v, row) =>
+            (_v, row) =>
               new tileType(col, row)
           )
       );
@@ -34,13 +34,11 @@ export class TileGrid {
         const currentLocation = { x: j, y: i };
 
         if (
-          this.outOfRange(currentLocation)
-          || isEqual(currentLocation, tile.location)
+          !this.outOfRange(currentLocation)
+          && !isEqual(currentLocation, tile.location)
         ) {
-          continue;
+          tileRefs.push(this.get(currentLocation));
         }
-
-        tileRefs.push(this.get(currentLocation));
       }
     }
 
@@ -57,4 +55,4 @@ export class TileGrid {
       || x > this.size.colCount
       || y > this.size.rowCount;
   }
-};
+}

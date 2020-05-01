@@ -1,4 +1,4 @@
-import { MinesweeperEngine } from "./minesweeper/engine";
+import { MinesweeperEngine } from './minesweeper/engine';
 
 export function createEngine(gameType) {
   switch (gameType) {

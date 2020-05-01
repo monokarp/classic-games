@@ -1,4 +1,6 @@
-import { TileGrid } from "./tile-grid";
+/* eslint-disable no-param-reassign */
+
+import { TileGrid } from './tile-grid';
 
 function TestTile(x, y) {
   this.location = { x, y };
@@ -16,8 +18,9 @@ describe('TileGrid', () => {
       let result = '';
 
       grid.forEachTile(
-        (tile) =>
-          result = `${result}${tile.location.x}${tile.location.y}`
+        (tile) => {
+          result = `${result}${tile.location.x}${tile.location.y}`;
+        }
       );
 
       expect(result).toEqual('00011011');
@@ -25,7 +28,9 @@ describe('TileGrid', () => {
 
     it('should alter tile states', () => {
       grid.forEachTile(
-        (tile) => tile.name = `${tile.location.x}${tile.location.y}`
+        (tile) => {
+          tile.name = `${tile.location.x}${tile.location.y}`;
+        }
       );
 
       expect(grid.get({ x: 0, y: 1 }).name).toEqual('01');

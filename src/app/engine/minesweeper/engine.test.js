@@ -1,4 +1,4 @@
-import { MinesweeperEngine } from "./engine";
+import { MinesweeperEngine } from './engine';
 
 describe('MinesweeperEngine', () => {
   let engine;
