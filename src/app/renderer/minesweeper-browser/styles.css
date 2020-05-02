@@ -1,0 +1,21 @@
+.minesweeper-container {
+  display: flex;
+  flex-direction: row;
+  width: (30 * 25)px;
+  height: (16 * 25)px;
+}
+
+.minesweeper-tile {
+  display: block;
+  width: 25px;
+  height: 25px;
+}
+
+.start-button {
+  border-radius: 2px;
+}
+
+.message-container {
+  font-size: large;
+  font-weight: bold;
+}

@@ -36,7 +36,25 @@ describe('MinesweeperEngine', () => {
     engine.emit('test', { payload: 'test' });
   });
 
-  it('should init and emit initial game state', (done) => {
+  it('should reset and emit state', (done) => {
+    engine.addListener(GameEvents.StateChanged, state => {
+      for (let i = 0; i < GridSize.rows; i++) {
+        for (let j = 0; j < GridSize.cols; j++) {
+          expect(state[i][j]).toMatchObject({
+            hasBomb: false,
+            adjacentBombs: 0,
+            state: TileState.Concealed
+          });
+        }
+      }
+
+      done();
+    });
+
+    engine.setDefaultState();
+  });
+
+  it('should start game', (done) => {
     engine.addListener(GameEvents.StateChanged, state => {
       expect(state.length).toEqual(GridSize.rows);
 
@@ -51,7 +69,7 @@ describe('MinesweeperEngine', () => {
       done();
     });
 
-    engine.initGameState({ x: 0, y: 2 });
+    engine.startGame({ x: 0, y: 2 });
   });
 
   describe('actions', () => {
@@ -59,7 +77,7 @@ describe('MinesweeperEngine', () => {
       it('should open a closed tile', (done) => {
         const point = { x: 1, y: 2 };
 
-        engine.initGameState({ x: 0, y: 2 });
+        engine.startGame({ x: 0, y: 2 });
 
         engine.addListener(GameEvents.StateChanged, state => {
           for (let i = 0; i < GridSize.rows; i++) {
@@ -89,7 +107,7 @@ describe('MinesweeperEngine', () => {
       });
 
       it('should trigger cascade reveal', (done) => {
-        engine.initGameState({ x: 0, y: 2 });
+        engine.startGame({ x: 0, y: 2 });
 
         engine.addListener(GameEvents.GameWon, state => {
           for (let i = 0; i < GridSize.rows; i++) {
@@ -127,7 +145,7 @@ describe('MinesweeperEngine', () => {
       });
 
       it('should trigger game over', (done) => {
-        engine.initGameState({ x: 0, y: 2 });
+        engine.startGame({ x: 0, y: 2 });
 
         engine.addListener(GameEvents.GameLost, state => {
           for (let i = 0; i < GridSize.rows; i++) {
@@ -145,7 +163,7 @@ describe('MinesweeperEngine', () => {
 
     describe('reveal adjacent', () => {
       it('should abort unless expected adjacent bombs are marked', (done) => {
-        engine.initGameState({ x: 0, y: 2 });
+        engine.startGame({ x: 0, y: 2 });
 
         engine.addListener(GameEvents.StateChanged, state => {
           for (let i = 0; i < GridSize.rows; i++) {
@@ -175,7 +193,7 @@ describe('MinesweeperEngine', () => {
       });
 
       it('should reveal adjacent tiles', (done) => {
-        engine.initGameState({ x: 0, y: 2 });
+        engine.startGame({ x: 0, y: 2 });
 
         engine.processAction({ type: MinesweeperEvents.Flag, point: { x: 0, y: 3 } });
 
@@ -207,7 +225,7 @@ describe('MinesweeperEngine', () => {
       });
 
       it('should trigger game over', (done) => {
-        engine.initGameState({ x: 0, y: 2 });
+        engine.startGame({ x: 0, y: 2 });
 
         engine.processAction({ type: MinesweeperEvents.Flag, point: { x: 1, y: 3 } });
 
@@ -229,7 +247,7 @@ describe('MinesweeperEngine', () => {
       it('should ignore an opened tile', (done) => {
         const point = { x: 0, y: 2 };
 
-        engine.initGameState(point);
+        engine.startGame(point);
 
         engine.addListener(GameEvents.StateChanged, state => {
           expect(state[0][2]).toMatchObject({ state: TileState.Opened });
@@ -240,7 +258,7 @@ describe('MinesweeperEngine', () => {
       });
 
       it('should flag a concealed tile', (done) => {
-        engine.initGameState({ x: 0, y: 2 });
+        engine.startGame({ x: 0, y: 2 });
 
         engine.addListener(GameEvents.StateChanged, state => {
           expect(state[0][0]).toMatchObject({ state: TileState.Flagged });
@@ -255,7 +273,7 @@ describe('MinesweeperEngine', () => {
 
       it('should conceal mark a flagged tile', (done) => {
         const point = { x: 0, y: 0 };
-        engine.initGameState({ x: 0, y: 2 });
+        engine.startGame({ x: 0, y: 2 });
 
         engine.processAction({ type: MinesweeperEvents.Flag, point });
 

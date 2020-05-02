@@ -11,7 +11,13 @@ export class MinesweeperEngine extends EventEmitter {
     this.isGameOver = false;
   }
 
-  initGameState(point) {
+  setDefaultState() {
+    this.gameGrid.resetState();
+
+    this.emitState(GameEvents.StateChanged);
+  }
+
+  startGame(point) {
     this.gameGrid.init(point);
 
     this.processAction({

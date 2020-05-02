@@ -1,5 +1,6 @@
 {
     "env": {
+        "browser": true,
         "commonjs": true,
         "es6": true,
         "node": true,
@@ -35,6 +36,8 @@
         "function-paren-newline": "off",
         "new-cap": "off",
         "operator-linebreak": "off",
-        "no-confusing-arrow":"off"
+        "no-confusing-arrow": "off",
+        "no-restricted-syntax": "off",
+        "no-nested-ternary": "off"
     }
 }

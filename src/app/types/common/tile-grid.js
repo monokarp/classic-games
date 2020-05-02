@@ -6,14 +6,19 @@ export class TileGrid {
     rowCount,
     colCount
   ) {
+    this.tileType = tileType;
     this.size = { rowCount, colCount };
 
+    this.resetState();
+  }
+
+  resetState() {
     this.state =
-      Array.from(Array(rowCount),
+      Array.from(Array(this.size.rowCount),
         (v, row) =>
-          Array.from(Array(colCount),
+          Array.from(Array(this.size.colCount),
             (_v, col) =>
-              new tileType(row, col)
+              new this.tileType(row, col)
           )
       );
   }

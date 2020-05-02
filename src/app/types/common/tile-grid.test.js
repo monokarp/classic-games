@@ -20,6 +20,14 @@ describe('TileGrid', () => {
     grid.state.forEach(row => expect(row.length).toEqual(6));
   });
 
+  it('should reset state', () => {
+    grid.get({ x: 1, y: 1 }).test = 'test';
+
+    grid.resetState();
+
+    expect(grid.get({ x: 1, y: 1 }).test).toBeUndefined();
+  });
+
   describe('forEachTile', () => {
     it('should visit every tile', () => {
       let result = '';
