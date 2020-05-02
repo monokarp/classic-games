@@ -8,16 +8,12 @@ export class BrowserInputController {
   }
 
   onStart(handler) {
-    // document.addEventListener(
-    //   'click',
-    //   () => handler(),
-    //   { once: true }
-    // );
+    document.addEventListener('click', event => this.isValidStart(event) && handler());
   }
 
   onPlayerAction(handler) {
     document.addEventListener('mouseup', event => {
-      if (!this.isValid(event)) { return; }
+      if (!this.isValidMouseClick(event)) { return; }
 
       event.preventDefault();
 
@@ -53,8 +49,12 @@ export class BrowserInputController {
     };
   }
 
-  isValid(event) {
+  isValidMouseClick(event) {
     return [1, 2, 3].includes(event.which)
       && /^[0-9]*_[0-9]*$/.test(event.target.id);
+  }
+
+  isValidStart(event) {
+    return event.target.id === 'start';
   }
 }

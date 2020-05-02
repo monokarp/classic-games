@@ -13,9 +13,7 @@ export class MinesweeperBrowserRenderer {
   renderState(state) {
     this.messageContainer.innerText = '';
 
-    for (const child of this.container.children) {
-      child.remove();
-    }
+    this.container.innerHTML = '';
 
     state.forEach(row =>
       row.forEach(tile =>
@@ -25,15 +23,15 @@ export class MinesweeperBrowserRenderer {
   }
 
   renderGameLost(state) {
-    this.renderState(state);
+    this.messageContainer.innerText = 'git gud';
 
-    this.messageContainer.innerText = 'gj!';
+    this.renderState(state);
   }
 
   renderGameWon(state) {
-    this.renderState(state);
+    this.messageContainer.innerText = 'gj!';
 
-    this.messageContainer.innerText = 'git gud';
+    this.renderState(state);
   }
 
   createTileElement(tile) {
@@ -41,6 +39,15 @@ export class MinesweeperBrowserRenderer {
 
     element.setAttribute('id', `${tile.location.x}_${tile.location.y}`);
     element.classList.add('minesweeper-tile');
+
+    if (tile.state === TileState.Opened && !tile.hasBomb && !tile.adjacentBombs) {
+      element.classList.add('empty-tile');
+    }
+    if (tile.state === TileState.Opened && tile.hasBomb) {
+      element.classList.add('bomb-tile');
+    }
+
+
     element.innerHTML = this.getTileInnerHTML(tile);
 
     return element;

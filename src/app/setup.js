@@ -8,15 +8,11 @@ export function setup(gameType) {
   const engine = createEngine(gameType);
   const renderer = createRenderer(gameType);
 
-
-  inputController.onStart(engine.setDefaultState);
+  inputController.onStart(() => engine.setDefaultState());
 
   inputController.onPlayerAction(action => engine.processAction(action));
 
   engine.addListener(GameEvents.StateChanged, state => renderer.renderState(state));
-
-  // temp
-  engine.setDefaultState();
 
   engine.addListener(GameEvents.GameLost, state => renderer.renderGameLost(state));
 
