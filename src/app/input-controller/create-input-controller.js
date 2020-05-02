@@ -1,8 +1,8 @@
-import { MinesweeperInputController } from './minesweeper/cointroller';
+import { BrowserInputController } from './minesweeper/cointroller';
 
 export function createInputController(gameType) {
   switch (gameType) {
-    case 'minesweeper': return new MinesweeperInputController();
+    case 'minesweeper': return new BrowserInputController();
     default: throw new Error('Unknown game type');
   }
 }
