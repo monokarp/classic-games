@@ -1,18 +1,28 @@
 .minesweeper-container {
   display: flex;
   flex-direction: row;
-  width: (30 * 25)px;
-  height: (16 * 25)px;
+  width: 960px;
+  flex-wrap: wrap
 }
 
 .minesweeper-tile {
   display: block;
   width: 25px;
   height: 25px;
+  border-width: 1px;
+  border-radius: 2px;
+  border: solid;
+  border-color: black;
+  background-color: darkgrey;
+  margin: 1px;
 }
 
 .start-button {
   border-radius: 2px;
+  border: solid;
+  border-color: black;
+  width: fit-content;
+  padding: 2px;
 }
 
 .message-container {
