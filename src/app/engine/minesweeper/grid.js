@@ -1,9 +1,9 @@
-import { TileGrid } from '../../types/common/tile-grid';
+import { SquareGrid } from '../../types/common/square-grid';
 import { cloneDeep } from 'lodash';
 
 const mineRatio = 4.85;
 
-export class MinesweeperGrid extends TileGrid {
+export class MinesweeperGrid extends SquareGrid {
   init(point) {
     this.concealedTilesCount = 0;
 

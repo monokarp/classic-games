@@ -1,6 +1,6 @@
 import { isEqual } from 'lodash';
 
-export class TileGrid {
+export class SquareGrid {
   constructor(
     tileType,
     rowCount,

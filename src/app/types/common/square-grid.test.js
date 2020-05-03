@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 
-import { TileGrid } from './tile-grid';
+import { SquareGrid } from './square-grid';
 
 function TestTile(x, y) {
   this.location = { x, y };
@@ -10,11 +10,11 @@ describe('TileGrid', () => {
   let grid;
 
   beforeEach(() => {
-    grid = new TileGrid(TestTile, 2, 2);
+    grid = new SquareGrid(TestTile, 2, 2);
   });
 
   it('should init state', () => {
-    grid = new TileGrid(TestTile, 3, 6);
+    grid = new SquareGrid(TestTile, 3, 6);
 
     expect(grid.state.length).toEqual(3);
     grid.state.forEach(row => expect(row.length).toEqual(6));
@@ -54,7 +54,7 @@ describe('TileGrid', () => {
 
   describe('getAdjacentTiles', () => {
     beforeEach(() => {
-      grid = new TileGrid(TestTile, 3, 3);
+      grid = new SquareGrid(TestTile, 3, 3);
     });
 
     it('should get 9 tiles around the central tile', () => {
