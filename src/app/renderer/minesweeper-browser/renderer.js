@@ -8,20 +8,6 @@ export class MinesweeperBrowserRenderer {
     this.gameField = document.getElementById('gridContainer');
     this.messageContainer = document.getElementById('message');
     this.startButton = document.getElementById('start');
-
-    this.setContainerSize();
-  }
-
-  setContainerSize() {
-    const container = document.getElementById('container');
-
-    const { height, width } = this.getWindowDimensions();
-
-    const px = (value) => `${value}px`;
-
-    container.style.height = px(height);
-
-    container.style.width = px(width);
   }
 
   renderState(state) {
@@ -83,7 +69,7 @@ export class MinesweeperBrowserRenderer {
 
     element.setAttribute('id', `${tile.location.x}_${tile.location.y}`);
 
-    element.style.color = this.getColor(tile);
+    element.style.color = this.getFontColor(tile);
 
     element.classList.add(...this.getClassList(tile));
 
@@ -147,7 +133,7 @@ export class MinesweeperBrowserRenderer {
     return classList;
   }
 
-  getColor(tile) {
+  getFontColor(tile) {
     switch (tile.adjacentBombs) {
       case 1: return '#0000ff';
       case 2: return '#009900';
