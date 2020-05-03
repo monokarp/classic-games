@@ -1,8 +1,5 @@
 .minesweeper-grid-container {
-  display: flex;
-  flex-direction: row;
-  width: 960px;
-  flex-wrap: wrap
+  flex-wrap: wrap;
 }
 
 .minesweeper-tile {
@@ -15,7 +12,6 @@
   background-color: darkgrey;
   margin: 1px;
   font-weight: bolder;
-  font-size: 25px;
 }
 
 .empty-tile {
@@ -37,6 +33,9 @@
   font-size: 42px;
   text-align: center;
   vertical-align: middle;
+  position: absolute;
+  z-index: 1;
+  background: white;
 }
 
 .message-container {
@@ -48,4 +47,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.ui-container {
+  user-select: none;
 }

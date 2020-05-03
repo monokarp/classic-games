@@ -6,8 +6,8 @@ import { TileState } from '../../const/minesweeper/tile-state';
 export class MinesweeperBrowserRenderer {
   constructor() {
     this.gameField = document.getElementById('gridContainer');
-
     this.messageContainer = document.getElementById('message');
+    this.startButton = document.getElementById('start');
 
     this.setContainerSize();
   }
@@ -25,27 +25,57 @@ export class MinesweeperBrowserRenderer {
   }
 
   renderState(state) {
-    this.messageContainer.innerText = '';
+    this.hideStartButton();
 
-    this.gameField.innerHTML = '';
-
-    state.forEach(row =>
-      row.forEach(tile =>
-        this.gameField.appendChild(
-          this.createTileElement(tile)
-        )));
+    this.renderGrid(state);
   }
 
   renderGameLost(state) {
     this.messageContainer.innerText = 'git gud';
 
-    this.renderState(state);
+    this.showStartButton();
+
+    this.renderGrid(state);
   }
 
   renderGameWon(state) {
     this.messageContainer.innerText = 'gj!';
 
-    this.renderState(state);
+    this.showStartButton();
+
+    this.renderGrid(state);
+  }
+
+  renderGrid(state) {
+    this.messageContainer.innerText = '';
+
+    this.gameField.innerHTML = '';
+
+    state.forEach(row =>
+      this.gameField.appendChild(this.createRowElement(row))
+    );
+  }
+
+  hideStartButton() {
+    this.startButton.style.display = 'none';
+  }
+
+  showStartButton() {
+    this.startButton.style.display = 'flex';
+  }
+
+  createRowElement(row) {
+    const rowElement = document.createElement('div');
+
+    rowElement.classList.add('flex-row');
+
+    row.forEach(tile =>
+      rowElement.appendChild(
+        this.createTileElement(tile)
+      )
+    );
+
+    return rowElement;
   }
 
   createTileElement(tile) {
@@ -57,6 +87,8 @@ export class MinesweeperBrowserRenderer {
 
     element.classList.add(...this.getClassList(tile));
 
+    element.style.fontSize = this.getFontSize(tile);
+
     element.innerHTML = this.getTileInnerHTML(tile);
 
     return element;
@@ -64,7 +96,7 @@ export class MinesweeperBrowserRenderer {
 
   getTileInnerHTML(tile) {
     switch (tile.state) {
-      case TileState.Flagged: return '&#10071';
+      case TileState.Flagged: return '&#128681';
 
       case TileState.Opened:
         return tile.hasBomb
@@ -87,6 +119,18 @@ export class MinesweeperBrowserRenderer {
         || document.documentElement.clientHeight
         || document.body.clientHeight
     };
+  }
+
+  getFontSize(tile) {
+    if (tile.hasBomb || tile.state === TileState.Flagged) {
+      return '20px';
+    }
+
+    if (tile.adjacentBombs) {
+      return '25px';
+    }
+
+    return '0px';
   }
 
   getClassList(tile) {
