@@ -52,15 +52,10 @@ export class MinesweeperBrowserRenderer {
     const element = document.createElement('div');
 
     element.setAttribute('id', `${tile.location.x}_${tile.location.y}`);
-    element.classList.add('minesweeper-tile');
 
-    if (tile.state === TileState.Opened && !tile.hasBomb && !tile.adjacentBombs) {
-      element.classList.add('empty-tile');
-    }
-    if (tile.state === TileState.Opened && tile.hasBomb) {
-      element.classList.add('bomb-tile');
-    }
+    element.style.color = this.getColor(tile);
 
+    element.classList.add(...this.getClassList(tile));
 
     element.innerHTML = this.getTileInnerHTML(tile);
 
@@ -69,11 +64,11 @@ export class MinesweeperBrowserRenderer {
 
   getTileInnerHTML(tile) {
     switch (tile.state) {
-      case TileState.Flagged: return 'F';
+      case TileState.Flagged: return '&#10071';
 
       case TileState.Opened:
         return tile.hasBomb
-          ? '*'
+          ? '&#128163'
           : tile.adjacentBombs
             ? tile.adjacentBombs.toString()
             : '';
@@ -92,5 +87,33 @@ export class MinesweeperBrowserRenderer {
         || document.documentElement.clientHeight
         || document.body.clientHeight
     };
+  }
+
+  getClassList(tile) {
+    const classList = ['minesweeper-tile', 'flex-container'];
+
+    if (tile.state === TileState.Opened && !tile.hasBomb && !tile.adjacentBombs) {
+      classList.push('empty-tile');
+    }
+
+    if (tile.state === TileState.Opened && tile.hasBomb) {
+      classList.push('bomb-tile', 'flex-container');
+    }
+
+    return classList;
+  }
+
+  getColor(tile) {
+    switch (tile.adjacentBombs) {
+      case 1: return '#0000ff';
+      case 2: return '#009900';
+      case 3: return '#ff3300';
+      case 4: return '#ff9900';
+      case 5: return '#cc0099';
+      case 6: return '#3333ff';
+      case 7: return '#ffffff';
+      case 8: return '#cc3300';
+      default: return '#000000';
+    }
   }
 }
