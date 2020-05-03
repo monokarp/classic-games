@@ -1,7 +1,7 @@
 import { TileGrid } from '../../types/common/tile-grid';
 import { cloneDeep } from 'lodash';
 
-const mineRatio = 4.85;
+const mineRatio = 30;// 4.85;
 
 export class MinesweeperGrid extends TileGrid {
   init(point) {

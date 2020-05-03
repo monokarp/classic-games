@@ -1,4 +1,4 @@
-.minesweeper-container {
+.minesweeper-grid-container {
   display: flex;
   flex-direction: row;
   width: 960px;
@@ -38,4 +38,12 @@
 .message-container {
   font-size: large;
   font-weight: bold;
+}
+
+.container{
+  text-align: center;
+}
+
+.game-field-container{
+  display: inline-block;
 }

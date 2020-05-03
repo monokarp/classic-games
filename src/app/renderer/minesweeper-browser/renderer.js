@@ -5,19 +5,33 @@ import { TileState } from '../../const/minesweeper/tile-state';
 /* eslint-disable class-methods-use-this */
 export class MinesweeperBrowserRenderer {
   constructor() {
-    this.container = document.getElementById('gameFieldContainer');
+    this.gameField = document.getElementById('gridContainer');
 
     this.messageContainer = document.getElementById('message');
+
+    this.setContainerSize();
+  }
+
+  setContainerSize() {
+    const container = document.getElementById('container');
+
+    const { height, width } = this.getWindowDimensions();
+
+    const px = (value) => `${value}px`;
+
+    container.style.height = px(height);
+
+    container.style.width = px(width);
   }
 
   renderState(state) {
     this.messageContainer.innerText = '';
 
-    this.container.innerHTML = '';
+    this.gameField.innerHTML = '';
 
     state.forEach(row =>
       row.forEach(tile =>
-        this.container.appendChild(
+        this.gameField.appendChild(
           this.createTileElement(tile)
         )));
   }
@@ -67,5 +81,16 @@ export class MinesweeperBrowserRenderer {
       case TileState.Concealed:
       default: return '';
     }
+  }
+
+  getWindowDimensions() {
+    return {
+      width: window.innerWidth
+        || document.documentElement.clientWidth
+        || document.body.clientWidth,
+      height: window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight
+    };
   }
 }
