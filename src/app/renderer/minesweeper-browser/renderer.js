@@ -1,10 +1,19 @@
-import './styles.css';
+import './minesweeper.css';
 
 import { TileState } from '../../const/minesweeper/tile-state';
 
+const template =
+  `<div id="container" class="flex-container ui-container">
+    <div id="start" class="start-button flex-container">Start</div>
+    <div id="gridContainer" class="minesweeper-grid-container"></div>
+    <div id="message" class="message-container"></div>
+  </div>`;
+
 /* eslint-disable class-methods-use-this */
 export class MinesweeperBrowserRenderer {
-  constructor() {
+  constructor(hostElementId) {
+    document.getElementById(hostElementId).innerHTML = template;
+
     this.gameField = document.getElementById('gridContainer');
     this.messageContainer = document.getElementById('message');
     this.startButton = document.getElementById('start');

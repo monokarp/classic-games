@@ -14,16 +14,18 @@ export class MinesweeperEngine extends EventEmitter {
 
     this.isGameOver = false;
 
+    this.isInitialized = false;
+
     this.emitState(GameEvents.StateChanged);
   }
 
-  startGame(point) {
-    this.gameGrid.init(point);
-
-    this.processAction({ type: MinesweeperEvents.Reveal, point });
-  }
-
   processAction({ type, point }) {
+    if (!this.isInitialized) {
+      this.gameGrid.init(point);
+
+      this.isInitialized = true;
+    }
+
     const tile = this.gameGrid.get(point);
 
     this.getActionHandler(type)(tile);

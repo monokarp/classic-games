@@ -3,16 +3,20 @@
 import { MinesweeperEvents } from '../../const/minesweeper/events';
 
 export class BrowserInputController {
-  constructor() {
-    document.addEventListener('contextmenu', event => (event.preventDefault(), false));
+  constructor(hostElementId) {
+    this.host = document.getElementById(hostElementId);
+
+    this.host.addEventListener('contextmenu', event => event.preventDefault());
+
+    this.host.addEventListener('mousedown', event => event.preventDefault());
   }
 
   onStart(handler) {
-    document.addEventListener('click', event => this.isValidStart(event) && handler());
+    this.host.addEventListener('click', event => this.isValidStart(event) && handler());
   }
 
   onPlayerAction(handler) {
-    document.addEventListener('mouseup', event => {
+    this.host.addEventListener('mouseup', event => {
       if (!this.isValidMouseClick(event)) { return; }
 
       event.preventDefault();

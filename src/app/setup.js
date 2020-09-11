@@ -3,10 +3,10 @@ import { createEngine } from './engine/create-engine';
 import { createInputController } from './input-controller/create-input-controller';
 import { createRenderer } from './renderer/create-renderer';
 
-export function setup(gameType) {
-  const inputController = createInputController(gameType);
+export function setupApp(gameType, hostElementId) {
+  const inputController = createInputController(gameType, hostElementId);
   const engine = createEngine(gameType);
-  const renderer = createRenderer(gameType);
+  const renderer = createRenderer(gameType, hostElementId);
 
   inputController.onStart(() => engine.setDefaultState());
 

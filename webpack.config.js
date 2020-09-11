@@ -29,7 +29,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './src/app/renderer/minesweeper-browser/index.html',
+      template: './src/main.html',
     }),
   ],
   devServer: {
